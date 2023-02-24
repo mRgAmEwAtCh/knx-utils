@@ -3,13 +3,17 @@ package io.guw.knxutils.semanticanalyzer.semanticmodel;
 import io.guw.knxutils.knxprojectparser.GroupAddress;
 import io.guw.knxutils.semanticanalyzer.semanticmodel.util.KnxIdentifier;
 import io.guw.knxutils.semanticanalyzer.semanticmodel.util.KnxThing;
-import lombok.Data;
+import lombok.Getter;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
-@Data
 @KnxIdentifier(
         terms = {"rollo", "rolladen", "jalousie", "storen", "raff"},
         prefixes = {"J_", "R_"}
 )
+@Getter
+@ToString
+@SuperBuilder
 public class Shutter extends KnxThing {
     private final String name;
     private final GroupAddress primarySwitchGroupAddress;
