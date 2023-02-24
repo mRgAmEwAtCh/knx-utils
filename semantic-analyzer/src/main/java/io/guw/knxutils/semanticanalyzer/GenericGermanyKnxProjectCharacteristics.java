@@ -65,7 +65,7 @@ public class GenericGermanyKnxProjectCharacteristics extends KnxProjectCharacter
 	}
 
 	private boolean containsStatusTerm(Set<String> terms) {
-		return terms.contains("status") || terms.contains("ruckmeldung");
+		return terms.contains("status") || terms.contains("ruckmeldung") || terms.contains("rm");
 	}
 
 	private boolean descriptionContainsTag(GroupAddress ga, String tag) {
