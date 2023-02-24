@@ -1,19 +1,19 @@
 package io.guw.knxutils.semanticanalyzer.semanticmodel.util;
 
-import java.util.Arrays;
+import static java.util.Arrays.asList;
 import java.util.List;
 
-public class KnxObject {
+public class KnxThing {
     private KnxIdentifier getKnxIdentifier() {
         return this.getClass().getAnnotation(KnxIdentifier.class);
     }
     public List<String> getTerms(){
-        return Arrays.asList(getKnxIdentifier().terms());
+        return asList(getKnxIdentifier().terms());
     }
     public List<String> getPrefixes(){
-        return Arrays.asList(getKnxIdentifier().prefixes());
+        return asList(getKnxIdentifier().prefixes());
     }
     public List<String> getDescriptions(){
-        return Arrays.asList(getKnxIdentifier().description());
+        return asList(getKnxIdentifier().description());
     }
 }
