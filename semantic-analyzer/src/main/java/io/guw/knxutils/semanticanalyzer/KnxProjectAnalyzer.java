@@ -71,11 +71,24 @@ public class KnxProjectAnalyzer {
 		if ((dimGa != null) && (brightnessGa != null) && (brightnessStatusGa != null)) {
 			// use dimmable light
 			String name = characteristics.findName(ga, statusGa, dimGa, brightnessGa, brightnessStatusGa);
-			lights.add(new DimmableLight(name, ga, statusGa, dimGa, brightnessGa, brightnessStatusGa));
+			lights.add(DimmableLight.builder()
+					.name(name)
+					.primarySwitchGroupAddress(ga)
+					.statusGroupAddress(statusGa)
+					.dimGa(dimGa)
+					.brightnessStatusGa(brightnessStatusGa)
+					.brightnessGa(brightnessGa)
+					.build()
+			);
 		} else {
 			// go with simple light
 			String name = characteristics.findName(ga, statusGa);
-			lights.add(new Light(name, ga, statusGa));
+			lights.add(Light.builder()
+					.name(name)
+					.primarySwitchGroupAddress(ga)
+					.statusGroupAddress(statusGa)
+					.build()
+			);
 		}
 	}
 

@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import io.guw.knxutils.semanticanalyzer.semanticmodel.ModelType;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
@@ -66,10 +67,6 @@ public class GenericGermanyKnxProjectCharacteristics extends KnxProjectCharacter
 
 	private boolean containsStatusTerm(Set<String> terms) {
 		return terms.contains("status") || terms.contains("ruckmeldung") || terms.contains("rm");
-	}
-
-	private boolean descriptionContainsTag(GroupAddress ga, String tag) {
-		return (ga.getDescription() != null) && ga.getDescription().contains(tag);
 	}
 
 	/**
@@ -270,19 +267,8 @@ public class GenericGermanyKnxProjectCharacteristics extends KnxProjectCharacter
 
 	@Override
 	public boolean isLight(GroupAddress ga) {
-		if ((null == ga.getName()) || ga.getName().isBlank()) {
-			LOG.warn("GA with blank/empty name should be fixed: {}", ga);
-			return false;
-		}
-
-		GroupAddressDocument doc = groupAddressIndex.get(ga);
-		if (doc == null) {
-			LOG.warn("No index available for GA: {}", ga);
-			return false;
-		}
-
-		return nameContainsTerms(doc, lightIdentifyingTerms) || nameStartsWith(ga, lightIdentifyingPrefixes)
-				|| descriptionContainsTag(ga, "[Licht]");
+		return     ModelType.LIGHT.matchesModelType(ga, groupAddressIndex.get(ga))
+				|| ModelType.DIMMABLE_LIGHT.matchesModelType(ga, groupAddressIndex.get(ga));
 	}
 
 	boolean isMatchOnName(GroupAddress candidate, GroupAddress ga) {
@@ -342,13 +328,4 @@ public class GenericGermanyKnxProjectCharacteristics extends KnxProjectCharacter
 			groupAddressByThreePartAddress.put(ga.getAddress(), ga);
 		}
 	}
-
-	private boolean nameContainsTerms(GroupAddressDocument doc, Set<String> terms) {
-		return doc.nameTerms.parallelStream().filter((s) -> terms.contains(s)).findAny().isPresent();
-	}
-
-	private boolean nameStartsWith(GroupAddress ga, List<String> prefix) {
-		return prefix.parallelStream().filter((p) -> ga.getName().startsWith(p)).findAny().isPresent();
-	}
-
 }
