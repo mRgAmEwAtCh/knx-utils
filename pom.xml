@@ -11,7 +11,7 @@
   <packaging>pom</packaging>
 
   <name>KNX Utils</name>
-  <url>https://github.com/guw/knx-utils</url>
+  <url>https://github.com/mRgAmEwAtCh/knx-utils</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -69,6 +69,11 @@
         <groupId>org.yaml</groupId>
         <artifactId>snakeyaml</artifactId>
         <version>1.32</version>
+      </dependency>
+      <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>1.18.26</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
