@@ -5,6 +5,8 @@ import static java.util.stream.Collectors.toList;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.guw.knxutils.semanticanalyzer.semanticmodel.DimmableLight;
+import io.guw.knxutils.semanticanalyzer.semanticmodel.Light;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

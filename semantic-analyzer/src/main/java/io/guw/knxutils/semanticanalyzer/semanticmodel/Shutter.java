@@ -1,8 +1,8 @@
-package io.guw.knxutils.semanticanalyzer.categories;
+package io.guw.knxutils.semanticanalyzer.semanticmodel;
 
 import io.guw.knxutils.knxprojectparser.GroupAddress;
-import io.guw.knxutils.semanticanalyzer.categories.util.KnxIdentifier;
-import io.guw.knxutils.semanticanalyzer.categories.util.KnxObject;
+import io.guw.knxutils.semanticanalyzer.semanticmodel.util.KnxIdentifier;
+import io.guw.knxutils.semanticanalyzer.semanticmodel.util.KnxObject;
 import lombok.Data;
 
 @Data

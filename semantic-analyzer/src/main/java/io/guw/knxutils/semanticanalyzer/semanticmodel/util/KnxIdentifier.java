@@ -1,4 +1,4 @@
-package io.guw.knxutils.semanticanalyzer.categories.util;
+package io.guw.knxutils.semanticanalyzer.semanticmodel.util;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
