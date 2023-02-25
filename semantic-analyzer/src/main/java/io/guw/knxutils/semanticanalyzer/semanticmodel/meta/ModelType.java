@@ -1,7 +1,10 @@
-package io.guw.knxutils.semanticanalyzer.semanticmodel;
+package io.guw.knxutils.semanticanalyzer.semanticmodel.meta;
 
 import io.guw.knxutils.knxprojectparser.GroupAddress;
-import io.guw.knxutils.semanticanalyzer.GenericGermanyKnxProjectCharacteristics;
+import io.guw.knxutils.semanticanalyzer.characteristics.germany.GenericCharacteristics;
+import io.guw.knxutils.semanticanalyzer.semanticmodel.model.DimmableLight;
+import io.guw.knxutils.semanticanalyzer.semanticmodel.model.Light;
+import io.guw.knxutils.semanticanalyzer.semanticmodel.model.PowerOutlet;
 import io.guw.knxutils.semanticanalyzer.semanticmodel.util.KnxIdentifier;
 import lombok.Getter;
 import org.slf4j.Logger;
@@ -19,11 +22,11 @@ public enum ModelType {
     ;
     private static final Logger LOG = LoggerFactory.getLogger(ModelType.class);
     @Getter
-    private Set<String> terms;
+    private final Set<String> terms;
     @Getter
-    private List<String> prefix;
+    private final List<String> prefix;
     @Getter
-    private List<String> description;
+    private final List<String> description;
 
 
     ModelType(KnxIdentifier knxIdentifier) {
@@ -32,16 +35,16 @@ public enum ModelType {
         this.description = Arrays.asList(knxIdentifier.description());
     }
 
-    public boolean matchesModelType(GroupAddress ga, GenericGermanyKnxProjectCharacteristics.GroupAddressDocument doc){
+    public boolean matchesModelType(GroupAddress ga, GenericCharacteristics.GroupAddressDocument doc){
         return containsTerms(ga, doc) || containsPrefix(ga) || containsDescription(ga);
     }
 
-    private boolean containsTerms(GroupAddress ga, GenericGermanyKnxProjectCharacteristics.GroupAddressDocument doc) {
+    private boolean containsTerms(GroupAddress ga, GenericCharacteristics.GroupAddressDocument doc) {
         if (doc == null) {
             LOG.warn("No index available for GA: {}", ga);
             return false;
         }
-        return doc.nameTerms.parallelStream().filter((s) -> terms.contains(s)).findAny().isPresent();
+        return doc.nameTerms.parallelStream().anyMatch(terms::contains);
     }
 
     private boolean containsPrefix(GroupAddress ga) {
@@ -49,7 +52,7 @@ public enum ModelType {
             LOG.warn("GA with blank/empty name should be fixed: {}", ga);
             return false;
         }
-        return prefix.parallelStream().filter((p) -> ga.getName().startsWith(p)).findAny().isPresent();
+        return prefix.parallelStream().anyMatch((p) -> ga.getName().startsWith(p));
     }
 
     private boolean containsDescription(GroupAddress ga) {

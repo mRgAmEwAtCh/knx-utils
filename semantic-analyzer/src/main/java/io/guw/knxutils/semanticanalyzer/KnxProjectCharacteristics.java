@@ -2,6 +2,7 @@ package io.guw.knxutils.semanticanalyzer;
 
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,9 +21,9 @@ import io.guw.knxutils.knxprojectparser.GroupAddress;
  * analysis sessions of different projects.
  * </p>
  */
+@Slf4j
 public abstract class KnxProjectCharacteristics {
 
-	private static final Logger LOG = LoggerFactory.getLogger(KnxProjectCharacteristics.class);
 	private int warnings;
 
 	/**
@@ -41,15 +42,15 @@ public abstract class KnxProjectCharacteristics {
 		for (CommunicationObject co : ga.getWritingCommunicationObjects()) {
 			if (co.getDatapointType() != null) {
 				if (ga.getDatapointType() == null) {
-					LOG.debug("Update DPT to {} based on CO {} for GA {}", co.getDatapointType(), co, ga);
+					log.debug("Update DPT to {} based on CO {} for GA {}", co.getDatapointType(), co, ga);
 					ga.setDatapointType(co.getDatapointType());
 				} else if (!ga.getDatapointType().equals(co.getDatapointType())) {
-					LOG.warn("Found communication object with DPT {} which differs from expected {}\n  {}\n  GA {}",
+					log.warn("Found communication object with DPT {} which differs from expected {}\n  {}\n  GA {}",
 							co.getDatapointType(), ga.getDatapointType(), co, ga);
 					warnings++;
 				}
 			} else {
-				LOG.warn("Found communication object without DPT\n  {}\n  GA {}", co, ga);
+				log.warn("Found communication object without DPT\n  {}\n  GA {}", co, ga);
 				warnings++;
 			}
 		}
@@ -57,7 +58,7 @@ public abstract class KnxProjectCharacteristics {
 		if ((ga.getName() == null) || ga.getName().isBlank()) {
 			for (CommunicationObject co : ga.getWritingCommunicationObjects()) {
 				if ((co.getDescription() != null) && !co.getDescription().isBlank()) {
-					LOG.debug("Update name to '{}' based on CO {} for GA {}", co.getDescription(), co, ga);
+					log.debug("Update name to '{}' based on CO {} for GA {}", co.getDescription(), co, ga);
 					ga.setName(co.getDescription());
 					break; // first one wins
 				}
@@ -66,7 +67,7 @@ public abstract class KnxProjectCharacteristics {
 
 		if ((ga.getName() == null)
 				|| ((ga.getName().isBlank()) && ((ga.getDescription() != null) && !ga.getDescription().isBlank()))) {
-			LOG.debug("Update name to '{}' based on description for GA {}", ga.getDescription(), ga);
+			log.debug("Update name to '{}' based on description for GA {}", ga.getDescription(), ga);
 			ga.setName(ga.getDescription());
 		}
 	}
@@ -167,6 +168,14 @@ public abstract class KnxProjectCharacteristics {
 	 * @return <code>true</code> if the specified GA is related to lighting
 	 */
 	public abstract boolean isLight(GroupAddress ga);
+
+	/**
+	 * Indicates if a GA is related to shutter (eg., Jalousie, Rolladen)
+	 *
+	 * @param ga a group address
+	 * @return <code>true</code> if the specified GA is related to shutter
+	 */
+	public abstract boolean isShutter(GroupAddress ga);
 
 	/**
 	 * Indicates if a GA is a primary GA responsible for switching a light on/off.

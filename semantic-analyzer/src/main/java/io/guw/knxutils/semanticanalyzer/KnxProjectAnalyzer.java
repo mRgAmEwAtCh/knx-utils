@@ -5,8 +5,13 @@ import static java.util.stream.Collectors.toList;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.guw.knxutils.semanticanalyzer.semanticmodel.DimmableLight;
-import io.guw.knxutils.semanticanalyzer.semanticmodel.Light;
+import io.guw.knxutils.semanticanalyzer.analyzer.LightsAnalyzer;
+import io.guw.knxutils.semanticanalyzer.analyzer.ShutterAnalyzer;
+import io.guw.knxutils.semanticanalyzer.characteristics.germany.GenericCharacteristics;
+import io.guw.knxutils.semanticanalyzer.characteristics.germany.LightCharacteristics;
+import io.guw.knxutils.semanticanalyzer.semanticmodel.model.DimmableLight;
+import io.guw.knxutils.semanticanalyzer.semanticmodel.model.Light;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,12 +23,14 @@ public class KnxProjectAnalyzer {
 	private static final Logger LOG = LoggerFactory.getLogger(KnxProjectAnalyzer.class);
 
 	private final KnxProjectFile knxProjectFile;
-	private final KnxProjectCharacteristics characteristics;
-	private final List<Light> lights = new ArrayList<>();
+	private final KnxProjectCharacteristics characteristics = new GenericCharacteristics();
+	@Getter
+	private LightsAnalyzer lightsAnalyzer;
+	@Getter
+	private ShutterAnalyzer shutterAnalyzer;
 
-	public KnxProjectAnalyzer(KnxProjectFile knxProjectFile, KnxProjectCharacteristics characteristics) {
+	public KnxProjectAnalyzer(KnxProjectFile knxProjectFile) {
 		this.knxProjectFile = knxProjectFile;
-		this.characteristics = characteristics;
 	}
 
 	public void analyze() {
@@ -40,67 +47,14 @@ public class KnxProjectAnalyzer {
 			LOG.warn("The project data generated a lot of warnings. Please consider improving the ETS data.");
 		}
 
-		// index all GAs
-		characteristics.learn(groupAddresses);
-
 		// find lights
-		List<GroupAddress> lightGroupAddresses = groupAddresses.parallelStream().filter(characteristics::isLight)
-				.collect(toList());
-
-		// group light GAs based on primaries
-		List<GroupAddress> primaryLightGroupAddresses = lightGroupAddresses.parallelStream()
-				.filter(characteristics::isPrimarySwitch).collect(toList());
-
-		// build potential lights
-		primaryLightGroupAddresses.forEach(this::analyzeLight);
+		lightsAnalyzer = new LightsAnalyzer(groupAddresses);
+		lightsAnalyzer.analyze();
 
 		// find shutters
-
+		shutterAnalyzer = new ShutterAnalyzer(groupAddresses);
+		shutterAnalyzer.analyze();
 	}
 
-	private void analyzeLight(GroupAddress ga) {
-		GroupAddress statusGa = characteristics.findMatchingStatusGroupAddress(ga);
-		if (statusGa == null) {
-			LOG.debug("Unable to find matching status GA for GA {} ({})", ga, ga.getName());
-			return;
-		}
 
-		GroupAddress dimGa = characteristics.findMatchingDimGroupAddress(ga);
-		GroupAddress brightnessGa = characteristics.findMatchingBrightnessGroupAddress(ga);
-		GroupAddress brightnessStatusGa = characteristics.findMatchingBrightnessStatusGroupAddress(ga);
-		if ((dimGa != null) && (brightnessGa != null) && (brightnessStatusGa != null)) {
-			// use dimmable light
-			String name = characteristics.findName(ga, statusGa, dimGa, brightnessGa, brightnessStatusGa);
-			lights.add(DimmableLight.builder()
-					.name(name)
-					.primarySwitchGroupAddress(ga)
-					.statusGroupAddress(statusGa)
-					.dimGa(dimGa)
-					.brightnessStatusGa(brightnessStatusGa)
-					.brightnessGa(brightnessGa)
-					.build()
-			);
-		} else {
-			// go with simple light
-			String name = characteristics.findName(ga, statusGa);
-			lights.add(Light.builder()
-					.name(name)
-					.primarySwitchGroupAddress(ga)
-					.statusGroupAddress(statusGa)
-					.build()
-			);
-		}
-	}
-
-	public KnxProjectCharacteristics getCharacteristics() {
-		return characteristics;
-	}
-
-	public KnxProjectFile getKnxProjectFile() {
-		return knxProjectFile;
-	}
-
-	public List<Light> getLights() {
-		return lights;
-	}
 }
