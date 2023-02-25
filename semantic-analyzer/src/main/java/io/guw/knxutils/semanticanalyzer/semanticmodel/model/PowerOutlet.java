@@ -1,4 +1,4 @@
-package io.guw.knxutils.semanticanalyzer.semanticmodel;
+package io.guw.knxutils.semanticanalyzer.semanticmodel.model;
 
 import io.guw.knxutils.knxprojectparser.GroupAddress;
 import io.guw.knxutils.semanticanalyzer.semanticmodel.util.KnxIdentifier;
@@ -10,7 +10,8 @@ import lombok.experimental.SuperBuilder;
 
 @KnxIdentifier(
         terms = {"dose", "steckdose", "strom"},
-        prefixes = {"S_"}
+        prefixes = {"S_"},
+        description = {"[Steckdose]"}
 )
 @Getter
 @ToString

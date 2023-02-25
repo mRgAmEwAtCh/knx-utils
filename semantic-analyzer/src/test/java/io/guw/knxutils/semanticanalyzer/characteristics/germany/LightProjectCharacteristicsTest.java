@@ -1,4 +1,4 @@
-package io.guw.knxutils.semanticanalyzer;
+package io.guw.knxutils.semanticanalyzer.characteristics.germany;
 
 import static io.guw.knxutils.knxprojectparser.DatapointType.State;
 import static io.guw.knxutils.knxprojectparser.DatapointType.Switch;
@@ -20,10 +20,9 @@ import org.junit.jupiter.api.Test;
 import io.guw.knxutils.knxprojectparser.GroupAddress;
 import io.guw.knxutils.knxprojectparser.GroupAddressRange;
 
-public class GenericGermanyKnxProjectCharacteristicsTest {
+public class LightProjectCharacteristicsTest {
 
-	private GenericGermanyKnxProjectCharacteristics characteristics;
-
+	private LightCharacteristics characteristics;
 	private void assertSingleTerm(String text, String expected) throws Exception {
 		Set<String> terms = characteristics.getTerms(text);
 		assertEquals(1, terms.size(), () -> format("expected terms of size one for input: '%s' but go: '%s'", text,
@@ -169,7 +168,7 @@ public class GenericGermanyKnxProjectCharacteristicsTest {
 
 	@BeforeEach
 	public void setup() {
-		characteristics = new GenericGermanyKnxProjectCharacteristics();
+		characteristics = new LightCharacteristics();
 	}
 
 	@AfterEach

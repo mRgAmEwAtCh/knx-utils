@@ -1,4 +1,4 @@
-package io.guw.knxutils.semanticanalyzer.semanticmodel;
+package io.guw.knxutils.semanticanalyzer.semanticmodel.model;
 
 import io.guw.knxutils.knxprojectparser.GroupAddress;
 import io.guw.knxutils.semanticanalyzer.semanticmodel.util.KnxIdentifier;

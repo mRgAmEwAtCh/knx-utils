@@ -4,10 +4,11 @@ import java.io.File;
 import java.util.concurrent.Callable;
 
 import io.guw.knxutils.knxprojectparser.KnxProjectFile;
-import io.guw.knxutils.semanticanalyzer.GenericGermanyKnxProjectCharacteristics;
+import io.guw.knxutils.semanticanalyzer.characteristics.germany.GenericCharacteristics;
 import io.guw.knxutils.semanticanalyzer.KnxProjectAnalyzer;
 import io.guw.knxutils.semanticanalyzer.KnxProjectCharacteristics;
 
+import lombok.extern.slf4j.Slf4j;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
@@ -16,6 +17,7 @@ import picocli.CommandLine.Parameters;
  * Converts a knxproj file to a set of configuration files.
  */
 @Command(name = "knxconvert")
+@Slf4j
 public class KnxConvertCommand implements Callable<Void> {
 
 	public static void main(String[] args) {
@@ -33,12 +35,10 @@ public class KnxConvertCommand implements Callable<Void> {
 		KnxProjectFile knxProjectFile = new KnxProjectFile(knxProjFile);
 		knxProjectFile.open();
 
-		KnxProjectCharacteristics characteristics = new GenericGermanyKnxProjectCharacteristics();
-
-		KnxProjectAnalyzer analyzer = new KnxProjectAnalyzer(knxProjectFile, characteristics);
+		KnxProjectAnalyzer analyzer = new KnxProjectAnalyzer(knxProjectFile);
 		analyzer.analyze();
 
-		analyzer.getLights().forEach(System.out::println);
+		analyzer.getLightsAnalyzer().getLights().forEach(light -> log.info(light.toString()));
 
 		return null;
 	}
