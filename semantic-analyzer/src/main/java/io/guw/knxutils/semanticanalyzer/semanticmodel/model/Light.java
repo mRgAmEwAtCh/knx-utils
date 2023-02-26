@@ -1,13 +1,12 @@
 package io.guw.knxutils.semanticanalyzer.semanticmodel.model;
 
 import io.guw.knxutils.knxprojectparser.GroupAddress;
-import io.guw.knxutils.semanticanalyzer.semanticmodel.util.KnxIdentifier;
-import io.guw.knxutils.semanticanalyzer.semanticmodel.util.KnxThing;
+import io.guw.knxutils.semanticanalyzer.semanticmodel.util.SemanticIdentifier;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-@KnxIdentifier(
+@SemanticIdentifier(
 		terms = {"licht", "leucht", "beleuchtung", "lamp", "spot",
 				"strahl"},
 		prefixes = {"L_"},
@@ -16,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @ToString
 @SuperBuilder
-public class Light extends KnxThing {
+public class Light {
 	private final String name;
 	private final GroupAddress primarySwitchGroupAddress;
 	private final GroupAddress statusGroupAddress;

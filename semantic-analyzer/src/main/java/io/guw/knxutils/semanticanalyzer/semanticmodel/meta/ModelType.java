@@ -3,7 +3,7 @@ package io.guw.knxutils.semanticanalyzer.semanticmodel.meta;
 import io.guw.knxutils.knxprojectparser.GroupAddress;
 import io.guw.knxutils.semanticanalyzer.characteristics.germany.GenericCharacteristics;
 import io.guw.knxutils.semanticanalyzer.semanticmodel.model.*;
-import io.guw.knxutils.semanticanalyzer.semanticmodel.util.KnxIdentifier;
+import io.guw.knxutils.semanticanalyzer.semanticmodel.util.SemanticIdentifier;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,11 +13,11 @@ import java.util.List;
 import java.util.Set;
 
 public enum ModelType {
-    LIGHT(Light.class.getAnnotation(KnxIdentifier.class)),
-    DIMMABLE_LIGHT(DimmableLight.class.getAnnotation(KnxIdentifier.class)),
-    POWER_OUTLET(PowerOutlet.class.getAnnotation(KnxIdentifier.class)),
-    SHUTTER(Shutter.class.getAnnotation(KnxIdentifier.class)),
-    BLINDS(Blinds.class.getAnnotation(KnxIdentifier.class)),
+    LIGHT(Light.class.getAnnotation(SemanticIdentifier.class)),
+    DIMMABLE_LIGHT(DimmableLight.class.getAnnotation(SemanticIdentifier.class)),
+    POWER_OUTLET(PowerOutlet.class.getAnnotation(SemanticIdentifier.class)),
+    SHUTTER(Shutter.class.getAnnotation(SemanticIdentifier.class)),
+    BLINDS(Blinds.class.getAnnotation(SemanticIdentifier.class)),
     ;
     private static final Logger LOG = LoggerFactory.getLogger(ModelType.class);
     @Getter
@@ -28,10 +28,10 @@ public enum ModelType {
     private final List<String> description;
 
 
-    ModelType(KnxIdentifier knxIdentifier) {
-        this.terms = Set.of(knxIdentifier.terms());
-        this.prefix = Arrays.asList(knxIdentifier.prefixes());
-        this.description = Arrays.asList(knxIdentifier.description());
+    ModelType(SemanticIdentifier semanticIdentifier) {
+        this.terms = Set.of(semanticIdentifier.terms());
+        this.prefix = Arrays.asList(semanticIdentifier.prefixes());
+        this.description = Arrays.asList(semanticIdentifier.description());
     }
 
     public boolean matchesModelType(GroupAddress ga, GenericCharacteristics.GroupAddressDocument doc){

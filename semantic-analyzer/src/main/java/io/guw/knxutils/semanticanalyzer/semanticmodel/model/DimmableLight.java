@@ -1,12 +1,12 @@
 package io.guw.knxutils.semanticanalyzer.semanticmodel.model;
 
 import io.guw.knxutils.knxprojectparser.GroupAddress;
-import io.guw.knxutils.semanticanalyzer.semanticmodel.util.KnxIdentifier;
+import io.guw.knxutils.semanticanalyzer.semanticmodel.util.SemanticIdentifier;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-@KnxIdentifier(
+@SemanticIdentifier(
 		terms = {"licht", "leucht", "beleuchtung", "lamp", "spot",
 				"strahl"},
 		prefixes = {"LD_", "LDA_"}
