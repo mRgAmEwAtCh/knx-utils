@@ -8,9 +8,9 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 @KnxIdentifier(
-        terms = {"rollo", "rolladen", "jalousie", "storen", "raff"},
-        prefixes = {"J_", "R_"},
-        description = {"[Rolladen]", "[Jalousie]"}
+        terms = {"rollo", "rolladen"},
+        prefixes = {"R_"},
+        description = {"[Rolladen]"}
 )
 @Getter
 @ToString
@@ -18,5 +18,8 @@ import lombok.experimental.SuperBuilder;
 public class Shutter extends KnxThing {
     private final String name;
     private final GroupAddress primarySwitchGroupAddress;
-    private final GroupAddress statusGroupAddress;
+    private final GroupAddress stopGroupAddress;
+    private final GroupAddress positionHeightGroupAddress;
+    private final GroupAddress lockGroupAddress;
+    private final GroupAddress statusPositionHeightGroupAddress;
 }

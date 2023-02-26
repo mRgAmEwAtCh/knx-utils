@@ -3,6 +3,7 @@ package io.guw.knxutils.semanticanalyzer.characteristics.germany;
 import io.guw.knxutils.knxprojectparser.DatapointType;
 import io.guw.knxutils.knxprojectparser.GroupAddress;
 import io.guw.knxutils.knxprojectparser.GroupAddressRange;
+import io.guw.knxutils.semanticanalyzer.characteristics.ga.pattern.LightPattern;
 import io.guw.knxutils.semanticanalyzer.semanticmodel.meta.ModelType;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,6 +15,7 @@ import static io.guw.knxutils.knxprojectparser.DatapointType.Scaling;
 import static io.guw.knxutils.knxprojectparser.GroupAddress.*;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
+import static io.guw.knxutils.semanticanalyzer.characteristics.ga.pattern.LightPattern.*;
 
 @Slf4j
 public class LightCharacteristics extends GenericCharacteristics{
@@ -23,7 +25,7 @@ public class LightCharacteristics extends GenericCharacteristics{
         // pattern 1: assume GAs a created as blocks of 5 GAs (0=OnOff, 1=Dim, 2=Value, 3=StatusOnOff, 4=StatusValue)
         // TODO: this should be configurable
         GroupAddress candidate = groupAddressByThreePartAddress
-                .get(GroupAddress.formatAsThreePartAddress(primarySwitchGroupAddress.getAddressInt() + 2));
+                .get(GroupAddress.formatAsThreePartAddress(primarySwitchGroupAddress.getAddressInt() + Value.getOffset()));
         if (candidate != null) {
             log.debug("Evaluating potential candidate for GA {}: {}", primarySwitchGroupAddress, candidate);
             if (isMatchOnNameAndDpt(candidate, primarySwitchGroupAddress, Scaling)) {
@@ -40,7 +42,7 @@ public class LightCharacteristics extends GenericCharacteristics{
         // pattern 1: assume GAs a created as blocks of 5 GAs (0=OnOff, 1=Dim, 2=Value, 3=StatusOnOff, 4=StatusValue)
         // TODO: this should be configurable
         GroupAddress candidate = groupAddressByThreePartAddress
-                .get(GroupAddress.formatAsThreePartAddress(primarySwitchGroupAddress.getAddressInt() + 1));
+                .get(GroupAddress.formatAsThreePartAddress(primarySwitchGroupAddress.getAddressInt() + Dim.getOffset()));
         if (candidate != null) {
             log.debug("Evaluating potential candidate for GA {}: {}", primarySwitchGroupAddress, candidate);
             if (isMatchOnNameAndDpt(candidate, primarySwitchGroupAddress, ControlDimming)) {
@@ -57,7 +59,7 @@ public class LightCharacteristics extends GenericCharacteristics{
         // pattern 1: assume GAs a created as blocks of 5 GAs (0=OnOff, 1=Dim, 2=Value, 3=StatusOnOff, 4=StatusValue)
         // TODO: this should be configurable
         GroupAddress candidate = groupAddressByThreePartAddress
-                .get(GroupAddress.formatAsThreePartAddress(primarySwitchGroupAddress.getAddressInt() + 4));
+                .get(GroupAddress.formatAsThreePartAddress(primarySwitchGroupAddress.getAddressInt() + StatusValue.getOffset()));
         if (candidate != null) {
             log.debug("Evaluating potential candidate for GA {}: {}", primarySwitchGroupAddress, candidate);
             if (isMatchOnNameAndDpt(candidate, primarySwitchGroupAddress, Scaling)) {
