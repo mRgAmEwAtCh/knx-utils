@@ -2,9 +2,7 @@ package io.guw.knxutils.semanticanalyzer.semanticmodel.meta;
 
 import io.guw.knxutils.knxprojectparser.GroupAddress;
 import io.guw.knxutils.semanticanalyzer.characteristics.germany.GenericCharacteristics;
-import io.guw.knxutils.semanticanalyzer.semanticmodel.model.DimmableLight;
-import io.guw.knxutils.semanticanalyzer.semanticmodel.model.Light;
-import io.guw.knxutils.semanticanalyzer.semanticmodel.model.PowerOutlet;
+import io.guw.knxutils.semanticanalyzer.semanticmodel.model.*;
 import io.guw.knxutils.semanticanalyzer.semanticmodel.util.KnxIdentifier;
 import lombok.Getter;
 import org.slf4j.Logger;
@@ -18,7 +16,8 @@ public enum ModelType {
     LIGHT(Light.class.getAnnotation(KnxIdentifier.class)),
     DIMMABLE_LIGHT(DimmableLight.class.getAnnotation(KnxIdentifier.class)),
     POWER_OUTLET(PowerOutlet.class.getAnnotation(KnxIdentifier.class)),
-    SHUTTER(PowerOutlet.class.getAnnotation(KnxIdentifier.class)),
+    SHUTTER(Shutter.class.getAnnotation(KnxIdentifier.class)),
+    BLINDS(Blinds.class.getAnnotation(KnxIdentifier.class)),
     ;
     private static final Logger LOG = LoggerFactory.getLogger(ModelType.class);
     @Getter

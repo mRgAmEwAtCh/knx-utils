@@ -29,28 +29,38 @@ public class ShutterAnalyzer {
         characteristics.learn(groupAddresses);
 
         // find shutters
-        List<GroupAddress> lightGroupAddresses = groupAddresses.parallelStream().filter(characteristics::isShutter)
+        List<GroupAddress> shutterGroupAddresses = groupAddresses.parallelStream().filter(characteristics::isShutter)
                 .collect(toList());
 
         // group shutters GAs based on primaries
-        List<GroupAddress> primaryLightGroupAddresses = lightGroupAddresses.parallelStream()
+        List<GroupAddress> primaryShutterGroupAddresses = shutterGroupAddresses.parallelStream()
                 .filter(characteristics::isPrimarySwitch).collect(toList());
 
         // build potential shutters
-        primaryLightGroupAddresses.forEach(this::analyzeShutter);
+        primaryShutterGroupAddresses.forEach(this::analyzeShutter);
     }
 
     private void analyzeShutter(GroupAddress ga) {
-        GroupAddress statusGa = characteristics.findMatchingStatusGroupAddress(ga);
-        if (statusGa == null) {
+        GroupAddress statusPositionHeight = characteristics.findMatchingStatusPositionHeightGroupAddress(ga);
+        if (statusPositionHeight == null) {
             log.debug("Unable to find matching status GA for GA {} ({})", ga, ga.getName());
             return;
         }
 
-        String name = characteristics.findName(ga, statusGa);
+        GroupAddress lockGa = characteristics.findMatchingLockGroupAddress(ga);
+        if (lockGa == null) {
+            log.debug("Unable to find matching status GA for GA {} ({})", ga, ga.getName());
+            return;
+        }
+
+        //TODO switch between shutter and blinds
+
+        String name = characteristics.findName(ga, statusPositionHeight);
         shutters.add(Shutter.builder()
                 .name(name)
                 .primarySwitchGroupAddress(ga)
+                .statusPositionHeightGroupAddress(statusPositionHeight)
+                .lockGroupAddress(lockGa)
                 .build()
         );
     }

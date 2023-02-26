@@ -134,8 +134,6 @@ public class GenericCharacteristics extends KnxProjectCharacteristicsAdapter {
 		return block;
 	}
 
-
-
 	@Override
 	public String findName(GroupAddress primaryGroupAddress, GroupAddress... additionalGroupAddresses) {
 		String name = primaryGroupAddress.getName();

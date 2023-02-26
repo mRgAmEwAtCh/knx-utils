@@ -39,6 +39,8 @@ public class KnxConvertCommand implements Callable<Void> {
 		analyzer.analyze();
 
 		analyzer.getLightsAnalyzer().getLights().forEach(light -> log.info(light.toString()));
+		analyzer.getShutterAnalyzer().getShutters().forEach(shutter -> log.info(shutter.toString()));
+		analyzer.getPowerOutletAnalyzer().getPowerOutlets().forEach(powerOutlet -> log.info(powerOutlet.toString()));
 
 		return null;
 	}

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.guw.knxutils.semanticanalyzer.analyzer.LightsAnalyzer;
+import io.guw.knxutils.semanticanalyzer.analyzer.PowerOutletAnalyzer;
 import io.guw.knxutils.semanticanalyzer.analyzer.ShutterAnalyzer;
 import io.guw.knxutils.semanticanalyzer.characteristics.germany.GenericCharacteristics;
 import io.guw.knxutils.semanticanalyzer.characteristics.germany.LightCharacteristics;
@@ -28,6 +29,8 @@ public class KnxProjectAnalyzer {
 	private LightsAnalyzer lightsAnalyzer;
 	@Getter
 	private ShutterAnalyzer shutterAnalyzer;
+	@Getter
+	private PowerOutletAnalyzer powerOutletAnalyzer;
 
 	public KnxProjectAnalyzer(KnxProjectFile knxProjectFile) {
 		this.knxProjectFile = knxProjectFile;
@@ -54,6 +57,10 @@ public class KnxProjectAnalyzer {
 		// find shutters
 		shutterAnalyzer = new ShutterAnalyzer(groupAddresses);
 		shutterAnalyzer.analyze();
+
+		// find shutters
+		powerOutletAnalyzer = new PowerOutletAnalyzer(groupAddresses);
+		powerOutletAnalyzer.analyze();
 	}
 
 
