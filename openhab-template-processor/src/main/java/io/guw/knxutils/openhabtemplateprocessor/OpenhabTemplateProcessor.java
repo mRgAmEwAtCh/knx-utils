@@ -31,8 +31,8 @@ public class OpenhabTemplateProcessor {
                 Template t = getTemplate(thing);
                 log.info("getting template for " + thing.getName() + " Path: " + t.getName());
                 VelocityContext context = new VelocityContext();
-                context.put("name", thing.getName());
-                context.put("description", thing.getPrimarySwitchGroupAddress().getDescription());
+                context.put("name", thing.getName()); // needs to be validated
+                context.put("description", thing.getPrimarySwitchGroupAddress().getDescription().lines().findFirst().orElse(thing.getName()));
 
                 StringWriter writer = new StringWriter();
                 t.merge( context, writer );
