@@ -14,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @ToString
 @SuperBuilder
-public class Shutter {
+public class Shutter implements Thing{
     private final String name;
     private final GroupAddress primarySwitchGroupAddress;
     private final GroupAddress stopGroupAddress;

@@ -5,6 +5,7 @@ import io.guw.knxutils.semanticanalyzer.characteristics.germany.GenericCharacter
 import io.guw.knxutils.semanticanalyzer.semanticmodel.model.*;
 import io.guw.knxutils.semanticanalyzer.semanticmodel.util.SemanticIdentifier;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,6 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+@Getter
 public enum ModelType {
     LIGHT(Light.class.getAnnotation(SemanticIdentifier.class)),
     DIMMABLE_LIGHT(DimmableLight.class.getAnnotation(SemanticIdentifier.class)),
@@ -20,13 +22,9 @@ public enum ModelType {
     BLINDS(Blinds.class.getAnnotation(SemanticIdentifier.class)),
     ;
     private static final Logger LOG = LoggerFactory.getLogger(ModelType.class);
-    @Getter
     private final Set<String> terms;
-    @Getter
     private final List<String> prefix;
-    @Getter
     private final List<String> description;
-
 
     ModelType(SemanticIdentifier semanticIdentifier) {
         this.terms = Set.of(semanticIdentifier.terms());

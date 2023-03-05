@@ -15,8 +15,9 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @ToString
 @SuperBuilder
-public class Light {
+public class Light implements Thing{
 	private final String name;
 	private final GroupAddress primarySwitchGroupAddress;
 	private final GroupAddress statusGroupAddress;
+	//public static boolean checkType(GroupAddress ga, GenericCharacteristics.GroupAddressDocument doc){return false;}
 }

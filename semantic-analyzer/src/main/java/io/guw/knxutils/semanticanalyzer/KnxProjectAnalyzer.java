@@ -1,17 +1,16 @@
 package io.guw.knxutils.semanticanalyzer;
 
-import static java.util.stream.Collectors.toList;
-
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import io.guw.knxutils.semanticanalyzer.analyzer.LightsAnalyzer;
 import io.guw.knxutils.semanticanalyzer.analyzer.PowerOutletAnalyzer;
 import io.guw.knxutils.semanticanalyzer.analyzer.ShutterAnalyzer;
 import io.guw.knxutils.semanticanalyzer.characteristics.germany.GenericCharacteristics;
-import io.guw.knxutils.semanticanalyzer.characteristics.germany.LightCharacteristics;
-import io.guw.knxutils.semanticanalyzer.semanticmodel.model.DimmableLight;
-import io.guw.knxutils.semanticanalyzer.semanticmodel.model.Light;
+import io.guw.knxutils.semanticanalyzer.semanticmodel.model.Thing;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +35,7 @@ public class KnxProjectAnalyzer {
 		this.knxProjectFile = knxProjectFile;
 	}
 
-	public void analyze() {
+	public List<Thing> analyze() {
 		List<GroupAddress> groupAddresses = knxProjectFile.getGroupAddresses();
 		if (groupAddresses.isEmpty()) {
 			throw new IllegalStateException("The project does not contain any Group Address.");
@@ -61,7 +60,12 @@ public class KnxProjectAnalyzer {
 		// find shutters
 		powerOutletAnalyzer = new PowerOutletAnalyzer(groupAddresses);
 		powerOutletAnalyzer.analyze();
-	}
 
+		return Stream.of(
+				lightsAnalyzer.getLights(),
+				shutterAnalyzer.getShutters(),
+				powerOutletAnalyzer.getPowerOutlets()
+		).flatMap(Collection::stream).collect(Collectors.toList());
+	}
 
 }

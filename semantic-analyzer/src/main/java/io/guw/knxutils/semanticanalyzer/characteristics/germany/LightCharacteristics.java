@@ -5,6 +5,7 @@ import io.guw.knxutils.knxprojectparser.GroupAddress;
 import io.guw.knxutils.knxprojectparser.GroupAddressRange;
 import io.guw.knxutils.semanticanalyzer.characteristics.ga.pattern.LightPattern;
 import io.guw.knxutils.semanticanalyzer.semanticmodel.meta.ModelType;
+import io.guw.knxutils.semanticanalyzer.semanticmodel.model.Light;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;

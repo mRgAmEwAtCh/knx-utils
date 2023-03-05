@@ -1,0 +1,4 @@
+Thing device $name "$description" [fetch=true, pingInterval=300, readInterval=3600]
+{
+
+}
