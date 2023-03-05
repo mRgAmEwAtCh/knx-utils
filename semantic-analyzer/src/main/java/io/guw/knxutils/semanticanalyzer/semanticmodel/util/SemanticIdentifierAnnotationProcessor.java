@@ -32,7 +32,7 @@ public class SemanticIdentifierAnnotationProcessor extends AbstractProcessor {
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         roundEnv.getElementsAnnotatedWith(SemanticIdentifier.class)
                 .forEach(this::verifyNotAnAnnotation);
-        return false;
+        return true;
     }
 
     private void verifyNotAnAnnotation(Element element) {

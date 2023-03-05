@@ -15,8 +15,9 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>11</maven.compiler.source>
-    <maven.compiler.target>11</maven.compiler.target>
+    <maven.compiler.source>18</maven.compiler.source>
+    <maven.compiler.target>18</maven.compiler.target>
+    <maven.compiler.compilerArgs>--enable-preview</maven.compiler.compilerArgs>
 
     <slf4j-version>1.7.30</slf4j-version>
     <picocli-version>4.6.1</picocli-version>
@@ -25,9 +26,10 @@
   </properties>
 
   <modules>
+    <module>cli</module>
     <module>knx-project-parser</module>
     <module>semantic-analyzer</module>
-    <module>cli</module>
+    <module>openhab-template-processor</module>
   </modules>
 
   <dependencyManagement>

@@ -1,13 +1,14 @@
 package io.guw.knxutils.cli;
 
 import java.io.File;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 import io.guw.knxutils.knxprojectparser.KnxProjectFile;
-import io.guw.knxutils.semanticanalyzer.characteristics.germany.GenericCharacteristics;
+import io.guw.knxutils.openhabtemplateprocessor.OpenhabTemplateProcessor;
 import io.guw.knxutils.semanticanalyzer.KnxProjectAnalyzer;
-import io.guw.knxutils.semanticanalyzer.KnxProjectCharacteristics;
 
+import io.guw.knxutils.semanticanalyzer.semanticmodel.model.Thing;
 import lombok.extern.slf4j.Slf4j;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -36,11 +37,13 @@ public class KnxConvertCommand implements Callable<Void> {
 		knxProjectFile.open();
 
 		KnxProjectAnalyzer analyzer = new KnxProjectAnalyzer(knxProjectFile);
-		analyzer.analyze();
+		final List<Thing> model = analyzer.analyze();
 
-		analyzer.getLightsAnalyzer().getLights().forEach(light -> log.info(light.toString()));
-		analyzer.getShutterAnalyzer().getShutters().forEach(shutter -> log.info(shutter.toString()));
-		analyzer.getPowerOutletAnalyzer().getPowerOutlets().forEach(powerOutlet -> log.info(powerOutlet.toString()));
+		model.forEach(thing -> log.info(thing.toString()));
+
+		final OpenhabTemplateProcessor openhabTemplateProcessor = new OpenhabTemplateProcessor(model);
+
+		openhabTemplateProcessor.generateModel();
 
 		return null;
 	}
