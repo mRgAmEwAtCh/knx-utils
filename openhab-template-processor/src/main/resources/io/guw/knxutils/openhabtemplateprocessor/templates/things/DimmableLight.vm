@@ -1,4 +1,7 @@
 Thing device $name "$description" [fetch=true, pingInterval=300, readInterval=3600]
 {
-
+    Type switch     : onOff             "Schalter"          [ switch="$primarySwitchGroupAddress+<$statusGroupAddress" ]
+    Type contact    : onOffStatus       "Schalter Status    [ ga="$statusGroupAddress"]
+    Type dimmer     : brightness        "Helligkeit"        [ switch="$primarySwitchGroupAddress+<$statusGroupAddress", increaseDecrease="$dimGa", position="$brightnessGa+<$brightnessStatusGa" ]
+    Type string     : brightnessStatus  "Helligkeit Status" [ ga="5.001:$brightnessStatusGa"]
 }

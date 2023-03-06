@@ -1,1 +1,5 @@
-Light $name
+Thing device $name "$description" [fetch=true, pingInterval=300, readInterval=3600]
+{
+    Type switch     : onOff             "Schalter"          [ switch="$primarySwitchGroupAddress+<$statusGroupAddress" ]
+    Type contact    : onOffStatus       "Schalter Status    [ ga="$statusGroupAddress"]
+}
