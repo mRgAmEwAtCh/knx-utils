@@ -1,37 +1,17 @@
 package io.guw.knxutils.semanticanalyzer.characteristics.germany;
 
-import static io.guw.knxutils.knxprojectparser.DatapointType.ControlDimming;
-import static io.guw.knxutils.knxprojectparser.DatapointType.Scaling;
-import static io.guw.knxutils.knxprojectparser.GroupAddress.formatAsThreePartAddress;
-import static io.guw.knxutils.knxprojectparser.GroupAddress.getAddressPart1;
-import static io.guw.knxutils.knxprojectparser.GroupAddress.getAddressPart2;
-import static io.guw.knxutils.knxprojectparser.GroupAddress.getAddressPart3;
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import io.guw.knxutils.semanticanalyzer.KnxProjectCharacteristics;
+import io.guw.knxutils.knxprojectparser.DatapointType;
+import io.guw.knxutils.knxprojectparser.GroupAddress;
+import io.guw.knxutils.knxprojectparser.GroupAddressRange;
 import io.guw.knxutils.semanticanalyzer.KnxProjectCharacteristicsAdapter;
-import io.guw.knxutils.semanticanalyzer.semanticmodel.meta.ModelType;
-import io.guw.knxutils.semanticanalyzer.semanticmodel.model.Light;
+import io.guw.knxutils.semanticanalyzer.luceneext.GermanAnalyzerWithDecompounder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 
-import io.guw.knxutils.knxprojectparser.DatapointType;
-import io.guw.knxutils.knxprojectparser.GroupAddress;
-import io.guw.knxutils.knxprojectparser.GroupAddressRange;
-import io.guw.knxutils.semanticanalyzer.luceneext.GermanAnalyzerWithDecompounder;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Characteristics typically found in a KNX project using German language and
@@ -156,6 +136,19 @@ public class GenericCharacteristics extends KnxProjectCharacteristicsAdapter {
 		}
 		return name;
 	}
+
+	GroupAddress findCandidate(GroupAddress primarySwitchGroupAddress, int offset, DatapointType dpt) {
+		GroupAddress candidate = groupAddressByThreePartAddress
+				.get(GroupAddress.formatAsThreePartAddress(primarySwitchGroupAddress.getAddressInt() + offset));
+		if (candidate != null) {
+			log.debug("Evaluating potential candidate for GA {}: {}", primarySwitchGroupAddress, candidate);
+			if (isMatchOnNameAndDpt(candidate, primarySwitchGroupAddress, dpt)) {
+				return candidate;
+			}
+		}
+		return null;
+	}
+
 	Set<String> getTerms(String text) throws IOException {
 		Set<String> terms = new LinkedHashSet<>(); // make sure we maintain order
 		try (TokenStream ts = germanAnalyzer.tokenStream("", text)) {

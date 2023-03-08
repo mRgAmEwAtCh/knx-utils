@@ -13,9 +13,11 @@ public enum DatapointType {
 	Switch("1.001"),
 	Bool("1.002"),
 	Enable("1.003"),
-
+	MoveStep ("1.007"),
 	UpDown("1.008"),
 	OpenClose("1.009"),
+
+	StartStop("1.010"),
 
 	State("1.011"),
 
@@ -45,7 +47,7 @@ public enum DatapointType {
 
 	private final String value;
 
-	private DatapointType(String value) {
+	DatapointType(String value) {
 		this.value = value;
 	}
 

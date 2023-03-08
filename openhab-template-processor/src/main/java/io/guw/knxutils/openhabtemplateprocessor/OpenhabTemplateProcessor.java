@@ -1,16 +1,18 @@
 package io.guw.knxutils.openhabtemplateprocessor;
 
 import io.guw.knxutils.knxprojectparser.GroupAddress;
-import io.guw.knxutils.semanticanalyzer.semanticmodel.model.*;
+import io.guw.knxutils.semanticanalyzer.semanticmodel.model.Thing;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.regex.Pattern;
@@ -24,7 +26,7 @@ public class OpenhabTemplateProcessor {
     private static final String ITEM_TEMPLATES = "items/";
     private static final String THING_TEMPLATES = "things/";
 
-    private final Pattern special = Pattern.compile ("[!@#$%&*()+=|<>?{}\\[\\]~]");
+    private final Pattern unsupportedNameCharacters = Pattern.compile ("[!@#$%&*()+=|<>,.?{}\\[\\]~]");
 
     VelocityEngine velocityEngine  = new VelocityEngine();
 
@@ -61,67 +63,43 @@ public class OpenhabTemplateProcessor {
     }
 
     private VelocityContext getVelocityContext(Thing thing) throws OpenhabValidationException {
-        return switch (thing){
-            case DimmableLight item -> addToContext(item);
-            case Light item -> addToContext(item);
-            case PowerOutlet item -> addToContext(item);
-            case Blinds item -> addToContext(item);
-            case Shutter item -> addToContext(item);
-            default -> new VelocityContext();
-        };
+        var context = new VelocityContext();
+        setNameAndDescription(context, thing);
+        addAllGaToContext(context, thing);
+        return context;
     }
 
-    private VelocityContext addToContext(Thing item) throws OpenhabValidationException {
-        var context = new VelocityContext();
+    public static List<Field> getAllFields(Class<?> type) {
+        List<Field> fields = new ArrayList<>();
+        for (Class<?> c = type; c != null; c = c.getSuperclass()) {
+            fields.addAll(Arrays.asList(c.getDeclaredFields()));
+        }
+        return fields;
+    }
 
-        if (special.matcher(item.getName()).find()){
+    private void addAllGaToContext(VelocityContext context, Thing item){
+        for (Field declaredField : getAllFields(item.getClass())) {
+            declaredField.setAccessible(true);
+            try {
+                if (declaredField.getType() == GroupAddress.class){
+                    context.put(declaredField.getName(), ((GroupAddress)declaredField.get(item)).getAddress());
+                }
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private void setNameAndDescription(VelocityContext context, Thing item) throws OpenhabValidationException {
+        if (unsupportedNameCharacters.matcher(item.getName()).find()){
             throw new OpenhabValidationException();
         }else {
             context.put("name", item.getName()); // needs to be validated
         }
 
         context.put("description", item.getPrimarySwitchGroupAddress().getDescription().lines().findFirst().orElse(item.getName()));
-        return context;
     }
 
-    private VelocityContext addToContext(Light item) throws OpenhabValidationException {
-        var context = addToContext((Thing) item);
-        context.put("primarySwitchGroupAddress", item.getPrimarySwitchGroupAddress().getAddress());
-        context.put("statusGroupAddress", item.getStatusGroupAddress().getAddress());
-        return context;
-    }
-
-    private VelocityContext addToContext(PowerOutlet item) throws OpenhabValidationException {
-        var context = addToContext((Thing) item);
-        context.put("primarySwitchGroupAddress", item.getPrimarySwitchGroupAddress().getAddress());
-        context.put("statusGroupAddress", item.getStatusGroupAddress().getAddress());
-        return context;
-    }
-
-    private VelocityContext addToContext(DimmableLight item) throws OpenhabValidationException {
-        var context = addToContext((Light) item);
-        context.put("dimGa", item.getDimGa().getAddress());
-        context.put("brightnessGa", item.getBrightnessGa().getAddress());
-        context.put("brightnessStatusGa", item.getBrightnessStatusGa().getAddress());
-        return context;
-    }
-
-    private VelocityContext addToContext(Shutter item) throws OpenhabValidationException {
-        var context = addToContext((Thing) item);
-        context.put("lockGroupAddress", item.getLockGroupAddress().getAddress());
-        context.put("stopGroupAddress", item.getStopGroupAddress().getAddress());
-        context.put("positionHeightGroupAddress", item.getPositionHeightGroupAddress().getAddress());
-        context.put("statusPositionHeightGroupAddress", item.getStatusPositionHeightGroupAddress().getAddress());
-        return context;
-    }
-
-    private VelocityContext addToContext(Blinds item) throws OpenhabValidationException {
-        var context = addToContext((Shutter) item);
-        context.put("positionSlateGroupAddress", item.getPositionSlateGroupAddress().getAddress());
-        context.put("statusPositionSlateGroupAddress", item.getStatusPositionSlateGroupAddress().getAddress());
-        context.put("shadowGroupAddress", item.getShadowGroupAddress().getAddress());
-        return context;
-    }
 
     private void initVelocityEngine() throws Exception {
         Properties p = new Properties();

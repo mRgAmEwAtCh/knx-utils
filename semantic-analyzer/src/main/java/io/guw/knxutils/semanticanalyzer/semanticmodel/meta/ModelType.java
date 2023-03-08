@@ -5,7 +5,6 @@ import io.guw.knxutils.semanticanalyzer.characteristics.germany.GenericCharacter
 import io.guw.knxutils.semanticanalyzer.semanticmodel.model.*;
 import io.guw.knxutils.semanticanalyzer.semanticmodel.util.SemanticIdentifier;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
