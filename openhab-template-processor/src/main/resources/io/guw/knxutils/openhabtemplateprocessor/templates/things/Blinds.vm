@@ -1,1 +1,7 @@
-Blinds $name
+Thing device $name "$description" [fetch=true, pingInterval=300, readInterval=3600]
+{
+    Type rollershutter :  shutter       "Rolladen"      [  upDown="$primarySwitchGroupAddress", stopMove="$stopGroupAddress", position="$positionHeightGroupAddress<+$statusPositionHeightGroupAddress" ]
+    Type dimmer        :  blinds        "Lamellen"      [  position="$positionSlateGroupAddress<+$statusPositionSlateGroupAddress" ]
+    Type switch        :  lock          "Sperre"        [  ga="$lockGroupAddress" ]
+    Type switch        :  shadow        "Beschatten"        [  ga="$shadowGroupAddress" ]
+}

@@ -3,7 +3,6 @@ package io.guw.knxutils.semanticanalyzer.characteristics.germany;
 import io.guw.knxutils.knxprojectparser.DatapointType;
 import io.guw.knxutils.knxprojectparser.GroupAddress;
 import io.guw.knxutils.knxprojectparser.GroupAddressRange;
-import io.guw.knxutils.semanticanalyzer.characteristics.ga.pattern.ShutterPattern;
 import io.guw.knxutils.semanticanalyzer.semanticmodel.meta.ModelType;
 import lombok.extern.slf4j.Slf4j;
 
@@ -11,18 +10,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static io.guw.knxutils.knxprojectparser.DatapointType.Scaling;
-import static io.guw.knxutils.knxprojectparser.DatapointType.Switch;
 import static io.guw.knxutils.knxprojectparser.GroupAddress.*;
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
 import static io.guw.knxutils.semanticanalyzer.characteristics.ga.pattern.ShutterPattern.*;
 
 @Slf4j
 // pattern 1: assume GAs a created as blocks of 10 GAs (0=UpDown, 1=Stop, 2=PositionHeight, 3=PostionSlate, 4=Shadow, 5=Lock, 6=StatusPositionHeight, 7=StatusPositionSlate, 8=unassigned, 9=unassigned)
 public class ShutterCharacteristics extends GenericCharacteristics{
 
-    Set<String> primaryKeyExclusionTerms = Set.of("sperr");
+    Set<String> primaryKeyExclusionTerms = Set.of("sperr", "lock");
 
     @Override
     public boolean isShutter(GroupAddress ga) {
@@ -45,39 +40,17 @@ public class ShutterCharacteristics extends GenericCharacteristics{
             return false;
         }
 
-        return !doc.nameTerms.stream().anyMatch(primaryKeyExclusionTerms::contains);
-    }
-
-    public GroupAddress findMatchingLockGroupAddress(GroupAddress primarySwitchGroupAddress) {
-        // pattern 1: assume GAs a created as blocks of 10 GAs (0=UpDown, 1=Stop, 2=PositionHeight, 3=PostionSlate, 4=Shadow, 5=Lock, 6=StatusPositionHeight, 7=StatusPositionSlate, 8=unassigned, 9=unassigned)
-        // TODO: this should be configurable
-        GroupAddress candidate = groupAddressByThreePartAddress
-                .get(GroupAddress.formatAsThreePartAddress(primarySwitchGroupAddress.getAddressInt() + Lock.getOffset()));
-        if (candidate != null) {
-            log.debug("Evaluating potential candidate for GA {}: {}", primarySwitchGroupAddress, candidate);
-            if (isMatchOnNameAndDpt(candidate, primarySwitchGroupAddress, Switch)) {
-                return candidate;
-            }
-        }
-
-        // give up
-        return null;
+        return doc.nameTerms.stream().noneMatch(primaryKeyExclusionTerms::contains);
     }
 
     public GroupAddress findMatchingStatusPositionHeightGroupAddress(GroupAddress primarySwitchGroupAddress) {
         // preselect based on common patterns
-        GroupAddress candidate = groupAddressByThreePartAddress
-                .get(GroupAddress.formatAsThreePartAddress(primarySwitchGroupAddress.getAddressInt() + StatusPositionHeight.getOffset()));
-        if (candidate != null) {
-            log.debug("Evaluating potential candidate for GA {}: {}", primarySwitchGroupAddress, candidate);
-            if (isMatchOnNameAndDpt(candidate, primarySwitchGroupAddress, Scaling)) {
-                return candidate;
-            }
-        }
+        GroupAddress candidate = findCandidate(primarySwitchGroupAddress, StatusPositionHeight.getOffset(), StatusPositionHeight.getDpt());
+        if (candidate != null) return candidate;
 
         // pattern 2: status GA is in a different range
         List<GroupAddressRange> statusRanges = groupAddressRangeIndex.entrySet().stream()
-                .filter((e) -> containsStatusTerm(e.getValue().nameTerms)).map(Map.Entry::getKey).collect(toList());
+                .filter((e) -> containsStatusTerm(e.getValue().nameTerms)).map(Map.Entry::getKey).toList();
         for (GroupAddressRange statusRange : statusRanges) {
             int part1, part2, part3;
             if (statusRange.getParent() == null) {
@@ -102,5 +75,29 @@ public class ShutterCharacteristics extends GenericCharacteristics{
 
         // give up
         return null;
+    }
+
+    public GroupAddress findMatchingLockGroupAddress(GroupAddress primarySwitchGroupAddress) {
+        return findCandidate(primarySwitchGroupAddress, Lock.getOffset(), Lock.getDpt());
+    }
+
+    public GroupAddress findMatchingStopGroupAddress(GroupAddress primarySwitchGroupAddress) {
+        return findCandidate(primarySwitchGroupAddress, Stop.getOffset(), Stop.getDpt());
+    }
+
+    public GroupAddress findMatchingPositionHeightGroupAddress(GroupAddress primarySwitchGroupAddress) {
+        return findCandidate(primarySwitchGroupAddress, PositionHeight.getOffset(), PositionHeight.getDpt());
+    }
+
+    public GroupAddress findMatchingPositionSlateGroupAddress(GroupAddress primarySwitchGroupAddress) {
+        return findCandidate(primarySwitchGroupAddress, PositionHeight.getOffset(), PositionHeight.getDpt());
+    }
+
+    public GroupAddress findMatchingShadowGroupAddress(GroupAddress primarySwitchGroupAddress) {
+        return findCandidate(primarySwitchGroupAddress, Shadow.getOffset(), Shadow.getDpt());
+    }
+
+    public GroupAddress findMatchingStatusPositionSlateGroupAddress(GroupAddress primarySwitchGroupAddress) {
+        return findCandidate(primarySwitchGroupAddress, StatusPositionSlate.getOffset(), StatusPositionSlate.getDpt());
     }
 }

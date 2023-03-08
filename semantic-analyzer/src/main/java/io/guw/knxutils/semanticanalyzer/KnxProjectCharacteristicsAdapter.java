@@ -9,21 +9,6 @@ import java.util.List;
 public class KnxProjectCharacteristicsAdapter extends KnxProjectCharacteristics {
 
 	@Override
-	public GroupAddress findMatchingBrightnessGroupAddress(GroupAddress primarySwitchGroupAddress) {
-		return null;
-	}
-
-	@Override
-	public GroupAddress findMatchingBrightnessStatusGroupAddress(GroupAddress primarySwitchGroupAddress) {
-		return null;
-	}
-
-	@Override
-	public GroupAddress findMatchingDimGroupAddress(GroupAddress primarySwitchGroupAddress) {
-		return null;
-	}
-
-	@Override
 	public GroupAddress findMatchingStatusGroupAddress(GroupAddress primarySwitchGroupAddress) {
 		return null;
 	}

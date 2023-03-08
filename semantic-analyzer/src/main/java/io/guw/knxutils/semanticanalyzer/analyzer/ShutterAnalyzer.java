@@ -2,8 +2,7 @@ package io.guw.knxutils.semanticanalyzer.analyzer;
 
 import io.guw.knxutils.knxprojectparser.GroupAddress;
 import io.guw.knxutils.semanticanalyzer.characteristics.germany.ShutterCharacteristics;
-import io.guw.knxutils.semanticanalyzer.semanticmodel.model.DimmableLight;
-import io.guw.knxutils.semanticanalyzer.semanticmodel.model.Light;
+import io.guw.knxutils.semanticanalyzer.semanticmodel.model.Blinds;
 import io.guw.knxutils.semanticanalyzer.semanticmodel.model.Shutter;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -11,8 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -30,11 +27,11 @@ public class ShutterAnalyzer {
 
         // find shutters
         List<GroupAddress> shutterGroupAddresses = groupAddresses.parallelStream().filter(characteristics::isShutter)
-                .collect(toList());
+                .toList();
 
         // group shutters GAs based on primaries
         List<GroupAddress> primaryShutterGroupAddresses = shutterGroupAddresses.parallelStream()
-                .filter(characteristics::isPrimarySwitch).collect(toList());
+                .filter(characteristics::isPrimarySwitch).toList();
 
         // build potential shutters
         primaryShutterGroupAddresses.forEach(this::analyzeShutter);
@@ -47,21 +44,54 @@ public class ShutterAnalyzer {
             return;
         }
 
+        GroupAddress stopGa = characteristics.findMatchingStopGroupAddress(ga);
+        if (stopGa == null) {
+            log.debug("Unable to find matching status GA for GA {} ({})", ga, ga.getName());
+            return;
+        }
+
+        GroupAddress positionHeight = characteristics.findMatchingPositionHeightGroupAddress(ga);
+        if (positionHeight == null) {
+            log.debug("Unable to find matching status GA for GA {} ({})", ga, ga.getName());
+            return;
+        }
+
         GroupAddress lockGa = characteristics.findMatchingLockGroupAddress(ga);
         if (lockGa == null) {
             log.debug("Unable to find matching status GA for GA {} ({})", ga, ga.getName());
             return;
         }
 
-        //TODO switch between shutter and blinds
+        GroupAddress slatePosition = characteristics.findMatchingPositionSlateGroupAddress(ga);
+        GroupAddress shadow = characteristics.findMatchingShadowGroupAddress(ga);
+        GroupAddress statusSlatePosition = characteristics.findMatchingStatusPositionSlateGroupAddress(ga);
 
+        //TODO switch between shutter and blinds
         String name = characteristics.findName(ga, statusPositionHeight);
-        shutters.add(Shutter.builder()
-                .name(name)
-                .primarySwitchGroupAddress(ga)
-                .statusPositionHeightGroupAddress(statusPositionHeight)
-                .lockGroupAddress(lockGa)
-                .build()
-        );
+
+        if (slatePosition != null && shadow != null && statusSlatePosition != null){
+            shutters.add(Blinds.builder()
+                    .name(name)
+                    .primarySwitchGroupAddress(ga)
+                    .stopGroupAddress(stopGa)
+                    .positionHeightGroupAddress(positionHeight)
+                    .lockGroupAddress(lockGa)
+                    .statusPositionHeightGroupAddress(statusPositionHeight)
+                    .positionSlateGroupAddress(slatePosition)
+                    .statusPositionSlateGroupAddress(statusSlatePosition)
+                    .shadowGroupAddress(shadow)
+                    .build()
+            );
+        }else{
+            shutters.add(Shutter.builder()
+                    .name(name)
+                    .primarySwitchGroupAddress(ga)
+                    .stopGroupAddress(stopGa)
+                    .positionHeightGroupAddress(positionHeight)
+                    .lockGroupAddress(lockGa)
+                    .statusPositionHeightGroupAddress(statusPositionHeight)
+                    .build()
+            );
+        }
     }
 }

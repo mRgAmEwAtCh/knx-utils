@@ -1,14 +1,11 @@
 package io.guw.knxutils.semanticanalyzer;
 
-import java.util.List;
-
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.guw.knxutils.knxprojectparser.CommunicationObject;
 import io.guw.knxutils.knxprojectparser.DatapointType;
 import io.guw.knxutils.knxprojectparser.GroupAddress;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
 
 /**
  * The characteristics of a KNX project.
@@ -71,58 +68,6 @@ public abstract class KnxProjectCharacteristics {
 			ga.setName(ga.getDescription());
 		}
 	}
-
-	/**
-	 * Finds a brightness group address for the specified group address.
-	 * <p>
-	 * The brightness group address can be used set a light's brightness level.
-	 * </p>
-	 * <p>
-	 * In order for this method to return anything at all, all group addresses will
-	 * be made available to the characteristics by calling {@link #learn(List)}.
-	 * </p>
-	 *
-	 * @param primarySwitchGroupAddress the switch GA (as identified by
-	 *                                  {@link #isPrimarySwitch(GroupAddress)}
-	 * @return the matching brightness address (maybe <code>null</code>)
-	 */
-	public abstract GroupAddress findMatchingBrightnessGroupAddress(GroupAddress primarySwitchGroupAddress);
-
-	/**
-	 * Finds a brightness status group address for the specified group address.
-	 * <p>
-	 * The brightness status group address reports back brightness status for a
-	 * group address. For
-	 * example, dimming the light or setting its brightness level would trigger a
-	 * status update
-	 * on the returned GA.
-	 * </p>
-	 * <p>
-	 * In order for this method to return anything at all, all group addresses will
-	 * be made available to the characteristics by calling {@link #learn(List)}.
-	 * </p>
-	 *
-	 * @param primarySwitchGroupAddress the switch GA (as identified by
-	 *                                  {@link #isPrimarySwitch(GroupAddress)}
-	 * @return the matching brightness status address (maybe <code>null</code>)
-	 */
-	public abstract GroupAddress findMatchingBrightnessStatusGroupAddress(GroupAddress primarySwitchGroupAddress);
-
-	/**
-	 * Finds a dim group address for the specified group address.
-	 * <p>
-	 * The dim group address can be used for dimming.
-	 * </p>
-	 * <p>
-	 * In order for this method to return anything at all, all group addresses will
-	 * be made available to the characteristics by calling {@link #learn(List)}.
-	 * </p>
-	 *
-	 * @param primarySwitchGroupAddress the switch GA (as identified by
-	 *                                  {@link #isPrimarySwitch(GroupAddress)}
-	 * @return the matching dim address (maybe <code>null</code>)
-	 */
-	public abstract GroupAddress findMatchingDimGroupAddress(GroupAddress primarySwitchGroupAddress);
 
 	/**
 	 * Finds a status group address for the specified group address.
