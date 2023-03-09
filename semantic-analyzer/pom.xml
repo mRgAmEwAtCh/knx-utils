@@ -12,6 +12,7 @@
   </parent>
 
   <artifactId>semantic-analyzer</artifactId>
+  <packaging>jar</packaging>
 
   <name>KNX Utils :: Semantic Analyzer</name>
 
@@ -97,32 +98,6 @@
           <plugins>
             <plugin>
               <artifactId>maven-compiler-plugin</artifactId>
-              <configuration>
-                <annotationProcessors>
-                  <annotationProcessor>
-                    io.guw.knxutils.semanticanalyzer.semanticmodel.util.SemanticIdentifierAnnotationProcessor
-                  </annotationProcessor>
-                </annotationProcessors>
-              </configuration>
-              <executions>
-                <execution>
-                  <id>default-compile</id>
-                  <phase>none</phase>
-                </execution>
-                <execution>
-                  <id>default-testCompile</id>
-                  <phase>none</phase>
-                </execution>
-              </executions>
-            </plugin>
-            <plugin>
-              <artifactId>maven-surefire-plugin</artifactId>
-              <executions>
-                <execution>
-                  <id>default-test</id>
-                  <phase>none</phase>
-                </execution>
-              </executions>
             </plugin>
             <plugin>
               <artifactId>maven-resources-plugin</artifactId>
