@@ -1,4 +1,4 @@
-package io.guw.knxutils.semanticanalyzer.characteristics.ga.pattern;
+package io.guw.knxutils.semanticanalyzer.characteristics.pattern;
 
 import io.guw.knxutils.knxprojectparser.DatapointType;
 import lombok.Getter;

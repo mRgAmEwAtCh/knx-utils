@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import static io.guw.knxutils.knxprojectparser.GroupAddress.*;
-import static io.guw.knxutils.semanticanalyzer.characteristics.ga.pattern.LightPattern.*;
+import static io.guw.knxutils.semanticanalyzer.characteristics.pattern.LightPattern.*;
 import static java.util.stream.Collectors.joining;
 
 /**

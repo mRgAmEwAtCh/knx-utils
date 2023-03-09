@@ -25,6 +25,10 @@ public enum DatapointType {
 
 	Scaling("5.001"),
 
+	Temperature("9.001"),
+
+	HVACMode("20.102")
+
 	// @formatter:on
 	;
 

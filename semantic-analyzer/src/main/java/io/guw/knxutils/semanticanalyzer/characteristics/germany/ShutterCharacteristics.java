@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static io.guw.knxutils.knxprojectparser.GroupAddress.*;
-import static io.guw.knxutils.semanticanalyzer.characteristics.ga.pattern.ShutterPattern.*;
+import static io.guw.knxutils.semanticanalyzer.characteristics.pattern.ShutterPattern.*;
 
 @Slf4j
 // pattern 1: assume GAs a created as blocks of 10 GAs (0=UpDown, 1=Stop, 2=PositionHeight, 3=PostionSlate, 4=Shadow, 5=Lock, 6=StatusPositionHeight, 7=StatusPositionSlate, 8=unassigned, 9=unassigned)
