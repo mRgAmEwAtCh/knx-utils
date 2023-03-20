@@ -19,4 +19,14 @@ public class Heating implements Thing{
     private final String name;
     @NonNull
     private final GroupAddress primarySwitchGroupAddress;
+    @NonNull
+    private final GroupAddress CurrentTemperature;
+    @NonNull
+    private final GroupAddress TargetTemperature;
+    @NonNull
+    private final GroupAddress StatusCurrentTemperature;
+    @NonNull
+    private final GroupAddress StatusTargetTemperature;
+    @NonNull
+    private final GroupAddress StateMode;
 }

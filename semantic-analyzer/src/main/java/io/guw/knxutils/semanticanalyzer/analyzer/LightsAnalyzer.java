@@ -29,11 +29,11 @@ public class LightsAnalyzer {
 
         // find lights
         List<GroupAddress> lightGroupAddresses = groupAddresses.parallelStream().filter(characteristics::isLight)
-                .collect(toList());
+                .toList();
 
         // group light GAs based on primaries
         List<GroupAddress> primaryLightGroupAddresses = lightGroupAddresses.parallelStream()
-                .filter(characteristics::isPrimarySwitch).collect(toList());
+                .filter(characteristics::isPrimarySwitch).toList();
 
         // build potential lights
         primaryLightGroupAddresses.forEach(this::analyzeLight);

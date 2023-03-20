@@ -147,15 +147,10 @@ public abstract class KnxProjectCharacteristics {
 			return false;
 		}
 
-		switch (dpt) {
-		case Switch:
-		case UpDown:
-		case OpenClose:
-			return true;
-
-		default:
-			return false;
-		}
+		return switch (dpt) {
+			case Switch, UpDown, OpenClose -> true;
+			default -> false;
+		};
 	}
 
 	/**
