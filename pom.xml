@@ -17,7 +17,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>18</maven.compiler.source>
     <maven.compiler.target>18</maven.compiler.target>
-    <maven.compiler.compilerArgs>--enable-preview</maven.compiler.compilerArgs>
 
     <slf4j-version>1.7.30</slf4j-version>
     <picocli-version>4.6.1</picocli-version>
@@ -88,7 +87,6 @@
         <configuration>
           <source>18</source>
           <target>18</target>
-          <compilerArgs>--enable-preview</compilerArgs>
         </configuration>
       </plugin>
       <plugin>

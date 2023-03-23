@@ -10,7 +10,8 @@ import lombok.experimental.SuperBuilder;
 @SemanticIdentifier(
 		terms = {"licht", "leucht", "beleuchtung", "lamp", "spot",
 				"strahl"},
-		prefixes = {"LD_", "LDA_"}
+		prefixes = {"LD_", "LDA_"},
+		description = {"[Dimmer]"}
 )
 @Getter
 @ToString(callSuper = true)

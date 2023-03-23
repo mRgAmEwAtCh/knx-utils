@@ -19,6 +19,7 @@ public enum ModelType {
     POWER_OUTLET(PowerOutlet.class.getAnnotation(SemanticIdentifier.class)),
     SHUTTER(Shutter.class.getAnnotation(SemanticIdentifier.class)),
     BLINDS(Blinds.class.getAnnotation(SemanticIdentifier.class)),
+    HEATING(Heating.class.getAnnotation(SemanticIdentifier.class)),
     ;
     private static final Logger LOG = LoggerFactory.getLogger(ModelType.class);
     private final Set<String> terms;

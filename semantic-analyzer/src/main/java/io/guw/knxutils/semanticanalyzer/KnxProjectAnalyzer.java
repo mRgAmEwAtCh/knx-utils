@@ -1,22 +1,20 @@
 package io.guw.knxutils.semanticanalyzer;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
+import io.guw.knxutils.knxprojectparser.GroupAddress;
+import io.guw.knxutils.knxprojectparser.KnxProjectFile;
+import io.guw.knxutils.semanticanalyzer.analyzer.HeatingAnalyzer;
 import io.guw.knxutils.semanticanalyzer.analyzer.LightsAnalyzer;
 import io.guw.knxutils.semanticanalyzer.analyzer.PowerOutletAnalyzer;
 import io.guw.knxutils.semanticanalyzer.analyzer.ShutterAnalyzer;
 import io.guw.knxutils.semanticanalyzer.characteristics.germany.GenericCharacteristics;
 import io.guw.knxutils.semanticanalyzer.semanticmodel.model.Thing;
-import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.guw.knxutils.knxprojectparser.GroupAddress;
-import io.guw.knxutils.knxprojectparser.KnxProjectFile;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class KnxProjectAnalyzer {
 
@@ -24,13 +22,6 @@ public class KnxProjectAnalyzer {
 
 	private final KnxProjectFile knxProjectFile;
 	private final KnxProjectCharacteristics characteristics = new GenericCharacteristics();
-	@Getter
-	private LightsAnalyzer lightsAnalyzer;
-	@Getter
-	private ShutterAnalyzer shutterAnalyzer;
-	@Getter
-	private PowerOutletAnalyzer powerOutletAnalyzer;
-
 	public KnxProjectAnalyzer(KnxProjectFile knxProjectFile) {
 		this.knxProjectFile = knxProjectFile;
 	}
@@ -50,22 +41,26 @@ public class KnxProjectAnalyzer {
 		}
 
 		// find lights
-		lightsAnalyzer = new LightsAnalyzer(groupAddresses);
+		LightsAnalyzer lightsAnalyzer = new LightsAnalyzer(groupAddresses);
 		lightsAnalyzer.analyze();
 
 		// find shutters
-		shutterAnalyzer = new ShutterAnalyzer(groupAddresses);
+		ShutterAnalyzer shutterAnalyzer = new ShutterAnalyzer(groupAddresses);
 		shutterAnalyzer.analyze();
 
 		// find shutters
-		powerOutletAnalyzer = new PowerOutletAnalyzer(groupAddresses);
+		PowerOutletAnalyzer powerOutletAnalyzer = new PowerOutletAnalyzer(groupAddresses);
 		powerOutletAnalyzer.analyze();
+
+		HeatingAnalyzer heatingAnalyzer = new HeatingAnalyzer((groupAddresses));
+		heatingAnalyzer.analyze();
 
 		return Stream.of(
 				lightsAnalyzer.getLights(),
 				shutterAnalyzer.getShutters(),
-				powerOutletAnalyzer.getPowerOutlets()
-		).flatMap(Collection::stream).collect(Collectors.toList());
+				powerOutletAnalyzer.getPowerOutlets(),
+				heatingAnalyzer.getHeatings()
+		).flatMap(Collection::parallelStream).collect(Collectors.toList());
 	}
 
 }

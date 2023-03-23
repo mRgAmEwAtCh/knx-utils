@@ -2,16 +2,12 @@ package io.guw.knxutils.semanticanalyzer.characteristics.germany;
 
 import io.guw.knxutils.knxprojectparser.DatapointType;
 import io.guw.knxutils.knxprojectparser.GroupAddress;
-import io.guw.knxutils.knxprojectparser.GroupAddressRange;
 import io.guw.knxutils.semanticanalyzer.semanticmodel.meta.ModelType;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import static io.guw.knxutils.knxprojectparser.GroupAddress.*;
-import static io.guw.knxutils.semanticanalyzer.characteristics.ga.pattern.ShutterPattern.*;
+import static io.guw.knxutils.semanticanalyzer.characteristics.pattern.ShutterPattern.*;
 
 @Slf4j
 // pattern 1: assume GAs a created as blocks of 10 GAs (0=UpDown, 1=Stop, 2=PositionHeight, 3=PostionSlate, 4=Shadow, 5=Lock, 6=StatusPositionHeight, 7=StatusPositionSlate, 8=unassigned, 9=unassigned)
@@ -49,32 +45,7 @@ public class ShutterCharacteristics extends GenericCharacteristics{
         if (candidate != null) return candidate;
 
         // pattern 2: status GA is in a different range
-        List<GroupAddressRange> statusRanges = groupAddressRangeIndex.entrySet().stream()
-                .filter((e) -> containsStatusTerm(e.getValue().nameTerms)).map(Map.Entry::getKey).toList();
-        for (GroupAddressRange statusRange : statusRanges) {
-            int part1, part2, part3;
-            if (statusRange.getParent() == null) {
-                part1 = getAddressPart1(statusRange.getStartInt());
-                part2 = getAddressPart2(primarySwitchGroupAddress.getAddressInt());
-                part3 = getAddressPart3(primarySwitchGroupAddress.getAddressInt());
-            } else {
-                part1 = getAddressPart1(primarySwitchGroupAddress.getAddressInt());
-                part2 = getAddressPart2(statusRange.getStartInt());
-                part3 = getAddressPart3(primarySwitchGroupAddress.getAddressInt());
-            }
-            String potentialStatusGa = formatAsThreePartAddress(part1, part2, part3);
-            candidate = groupAddressByThreePartAddress.get(potentialStatusGa);
-            if (candidate != null) {
-                log.debug("Evaluating potential candidate for GA {}: {}", primarySwitchGroupAddress, candidate);
-                if (isMatchOnNameAndDpt(candidate, primarySwitchGroupAddress, DatapointType.Scaling)) {
-                    log.debug("Found matching status for GA {}: {}", primarySwitchGroupAddress, candidate);
-                    return candidate;
-                }
-            }
-        }
-
-        // give up
-        return null;
+        return searchForStatusInPattern2(primarySwitchGroupAddress, DatapointType.Scaling);
     }
 
     public GroupAddress findMatchingLockGroupAddress(GroupAddress primarySwitchGroupAddress) {
