@@ -2,10 +2,7 @@ package io.guw.knxutils.semanticanalyzer.analyzer;
 
 import io.guw.knxutils.knxprojectparser.GroupAddress;
 import io.guw.knxutils.semanticanalyzer.characteristics.germany.HeatingCharacteristics;
-import io.guw.knxutils.semanticanalyzer.characteristics.germany.ShutterCharacteristics;
-import io.guw.knxutils.semanticanalyzer.semanticmodel.model.Blinds;
 import io.guw.knxutils.semanticanalyzer.semanticmodel.model.Heating;
-import io.guw.knxutils.semanticanalyzer.semanticmodel.model.Shutter;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,44 +33,51 @@ public class HeatingAnalyzer {
                 .filter(characteristics::isPrimarySwitch).toList();
 
         // build potential shutters
-        primaryShutterGroupAddresses.forEach(this::analyzeShutter);
+        primaryShutterGroupAddresses.forEach(this::analyzeHeater);
     }
 
-    private void analyzeShutter(GroupAddress ga) {
-        GroupAddress statusPositionHeight = characteristics.findMatchingStatusPositionHeightGroupAddress(ga);
-        if (statusPositionHeight == null) {
+    private void analyzeHeater(GroupAddress ga) {
+        GroupAddress currentTemperature = characteristics.findMatchingCurrentTemperatureGroupAddress(ga);
+        if (currentTemperature == null) {
             log.debug("Unable to find matching status GA for GA {} ({})", ga, ga.getName());
             return;
         }
 
-        GroupAddress stopGa = characteristics.findMatchingStopGroupAddress(ga);
-        if (stopGa == null) {
+        GroupAddress statusCurrentTemperature = characteristics.findMatchingStatusCurrentTemperatureGroupAddress(ga);
+        if (statusCurrentTemperature == null) {
             log.debug("Unable to find matching status GA for GA {} ({})", ga, ga.getName());
             return;
         }
 
-        GroupAddress positionHeight = characteristics.findMatchingPositionHeightGroupAddress(ga);
-        if (positionHeight == null) {
+        GroupAddress targetTemperature = characteristics.findMatchingTargetTemperatureGroupAddress(ga);
+        if (targetTemperature == null) {
             log.debug("Unable to find matching status GA for GA {} ({})", ga, ga.getName());
             return;
         }
 
-        GroupAddress lockGa = characteristics.findMatchingLockGroupAddress(ga);
-        if (lockGa == null) {
+        GroupAddress statusTargetTemperature = characteristics.findMatchingStatusTargetTemperatureGroupAddress(ga);
+        if (statusTargetTemperature == null) {
             log.debug("Unable to find matching status GA for GA {} ({})", ga, ga.getName());
             return;
         }
 
-        GroupAddress slatePosition = characteristics.findMatchingPositionSlateGroupAddress(ga);
-        GroupAddress shadow = characteristics.findMatchingShadowGroupAddress(ga);
-        GroupAddress statusSlatePosition = characteristics.findMatchingStatusPositionSlateGroupAddress(ga);
+        GroupAddress stateMode = characteristics.findMatchingStateModeGroupAddress(ga);
+        if (stateMode == null) {
+            log.debug("Unable to find matching status GA for GA {} ({})", ga, ga.getName());
+            return;
+        }
 
         //TODO switch between shutter and blinds
-        String name = characteristics.findName(ga, statusPositionHeight);
+        String name = characteristics.findName(ga, currentTemperature);
 
         heatings.add(Heating.builder()
                 .name(name)
                 .primarySwitchGroupAddress(ga)
+                .currentTemperatureGa(currentTemperature)
+                .statusCurrentTemperatureGa(statusCurrentTemperature)
+                .targetTemperatureGa(targetTemperature)
+                .statusTargetTemperatureGa(statusTargetTemperature)
+                .stateModeGa(stateMode)
                 .build()
         );
     }

@@ -4,7 +4,6 @@ import io.guw.knxutils.knxprojectparser.GroupAddress;
 import io.guw.knxutils.semanticanalyzer.semanticmodel.util.SemanticIdentifier;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Getter
@@ -20,13 +19,13 @@ public class Heating implements Thing{
     @NonNull
     private final GroupAddress primarySwitchGroupAddress;
     @NonNull
-    private final GroupAddress CurrentTemperature;
+    private final GroupAddress currentTemperatureGa;
     @NonNull
-    private final GroupAddress TargetTemperature;
+    private final GroupAddress targetTemperatureGa;
     @NonNull
-    private final GroupAddress StatusCurrentTemperature;
+    private final GroupAddress statusCurrentTemperatureGa;
     @NonNull
-    private final GroupAddress StatusTargetTemperature;
+    private final GroupAddress statusTargetTemperatureGa;
     @NonNull
-    private final GroupAddress StateMode;
+    private final GroupAddress stateModeGa;
 }
