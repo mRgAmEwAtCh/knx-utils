@@ -15,7 +15,7 @@ public enum ShutterPattern {
     UpDown(0, DatapointType.UpDown),
     Stop(1, MoveStep),
     PositionHeight(2, Scaling),
-    PostionSlate(3, Scaling),
+    PositionSlate(3, Scaling),
     Shadow(4, Switch),
     Lock(5, Switch),
     StatusPositionHeight(6, Scaling),

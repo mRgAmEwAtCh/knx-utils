@@ -61,7 +61,7 @@ public class ShutterCharacteristics extends GenericCharacteristics{
     }
 
     public GroupAddress findMatchingPositionSlateGroupAddress(GroupAddress primarySwitchGroupAddress) {
-        return findCandidate(primarySwitchGroupAddress, PositionHeight.getOffset(), PositionHeight.getDpt());
+        return findCandidate(primarySwitchGroupAddress, PositionSlate.getOffset(), PositionSlate.getDpt());
     }
 
     public GroupAddress findMatchingShadowGroupAddress(GroupAddress primarySwitchGroupAddress) {

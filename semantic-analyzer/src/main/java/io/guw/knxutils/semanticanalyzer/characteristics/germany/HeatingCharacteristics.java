@@ -10,7 +10,7 @@ import java.util.Set;
 import static io.guw.knxutils.semanticanalyzer.characteristics.pattern.HeatingPattern.*;
 
 @Slf4j
-// pattern 1: assume GAs a created as blocks of 10 GAs (0=UpDown, 1=Stop, 2=PositionHeight, 3=PostionSlate, 4=Shadow, 5=Lock, 6=StatusPositionHeight, 7=StatusPositionSlate, 8=unassigned, 9=unassigned)
+// pattern 1: assume GAs a created as blocks of 10 GAs (0=UpDown, 1=Stop, 2=PositionHeight, 3=PostionSlate, 4=Shadow, 5=Lock, 6=StatusPositionHeight, 7=StatusPositionSlate, 8=unassigned, 9=unassigned) TODO: adapt spec
 public class HeatingCharacteristics extends GenericCharacteristics{
 
     Set<String> primaryKeyExclusionTerms = Set.of("sperr", "lock");
@@ -44,7 +44,7 @@ public class HeatingCharacteristics extends GenericCharacteristics{
         if (candidate != null) return candidate;
 
         // pattern 2: status GA is in a different range
-        return searchForStatusInPattern2(primarySwitchGroupAddress, DatapointType.Temperature);
+        return searchForStatusInPattern2(findMatchingCurrentTemperatureGroupAddress(primarySwitchGroupAddress), DatapointType.Temperature);
     }
     public GroupAddress findMatchingCurrentTemperatureGroupAddress(GroupAddress primarySwitchGroupAddress) {
         return findCandidate(primarySwitchGroupAddress, CurrentTemperature.getOffset(), CurrentTemperature.getDpt());
@@ -56,7 +56,7 @@ public class HeatingCharacteristics extends GenericCharacteristics{
         if (candidate != null) return candidate;
 
         // pattern 2: status GA is in a different range
-        return searchForStatusInPattern2(primarySwitchGroupAddress, DatapointType.Temperature);
+        return searchForStatusInPattern2(findMatchingTargetTemperatureGroupAddress(primarySwitchGroupAddress), DatapointType.Temperature);
     }
     public GroupAddress findMatchingTargetTemperatureGroupAddress(GroupAddress primarySwitchGroupAddress) {
         return findCandidate(primarySwitchGroupAddress, TargetTemperature.getOffset(), TargetTemperature.getDpt());
