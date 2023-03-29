@@ -1,0 +1,22 @@
+plugins {
+    id "de.undercouch.download" version "5.4.0"
+}
+
+description 'KNX Utils :: Semantic Analyzer'
+
+dependencies {
+    implementation 'org.apache.lucene:lucene-analyzers-phonetic:8.8.2'
+    implementation 'org.apache.lucene:lucene-analyzers-common:8.8.2'
+    implementation project(':knx-project-parser')
+    testImplementation project(':knx-project-parser')
+    compileOnly 'com.google.auto.service:auto-service:1.0.1'
+}
+
+tasks.register('downloadGermanData', Download) {
+    src([
+            'https://raw.githubusercontent.com/uschindler/german-decompounder/master/de_DR.xml',
+            'https://raw.githubusercontent.com/uschindler/german-decompounder/master/dictionary-de.txt'
+    ])
+    dest "${projectDir}/src/main/resources/io/guw/knxutils/semanticanalyzer/luceneext/"
+    overwrite true
+}

@@ -1,0 +1,11 @@
+description 'KNX Utils :: Command Line'
+
+dependencies {
+    implementation project(':knx-project-parser')
+    implementation project(':semantic-analyzer')
+    implementation project(':openhab-template-processor')
+    implementation 'info.picocli:picocli:4.7.1'
+    implementation 'org.yaml:snakeyaml:2.0'
+
+}
+
