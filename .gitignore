@@ -12,3 +12,5 @@ target/
 ./.gradle
 /**/out/
 /**/build/
+.gradle
+/velocity.log
