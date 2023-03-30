@@ -20,3 +20,5 @@ tasks.register('downloadGermanData', Download) {
     dest "${projectDir}/src/main/resources/io/guw/knxutils/semanticanalyzer/luceneext/"
     overwrite true
 }
+
+processResources.dependsOn downloadGermanData

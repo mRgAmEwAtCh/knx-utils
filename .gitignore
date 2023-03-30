@@ -9,7 +9,6 @@ target/
 *.lock
 *.versionsBackup
 *.knxproj
-/openhab-template-processor/out/
-/knx-project-parser/out/
-/cli/out/
 ./.gradle
+/**/out/
+/**/build/

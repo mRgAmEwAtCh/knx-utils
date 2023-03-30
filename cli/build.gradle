@@ -9,3 +9,16 @@ dependencies {
 
 }
 
+jar {
+    manifest {
+        attributes 'Main-Class': 'io.guw.knxutils.cli.KnxConvertCommand'
+    }
+
+    from {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+
+    archiveBaseName = 'knx-utils-cli'
+}
+
