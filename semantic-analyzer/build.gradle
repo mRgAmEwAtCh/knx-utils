@@ -5,8 +5,8 @@ plugins {
 description 'KNX Utils :: Semantic Analyzer'
 
 dependencies {
-    implementation 'org.apache.lucene:lucene-analyzers-phonetic:8.8.2'
-    implementation 'org.apache.lucene:lucene-analyzers-common:8.8.2'
+    implementation 'org.apache.lucene:lucene-analyzers-phonetic:8.11.2'
+    implementation 'org.apache.lucene:lucene-analyzers-common:8.11.2'
     implementation project(':knx-project-parser')
     testImplementation project(':knx-project-parser')
     compileOnly 'com.google.auto.service:auto-service:1.0.1'

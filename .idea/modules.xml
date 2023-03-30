@@ -3,6 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/knx-utils.iml" filepath="$PROJECT_DIR$/.idea/modules/knx-utils.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/knx-project-parser/knx-utils.knx-project-parser.main.iml" filepath="$PROJECT_DIR$/.idea/modules/knx-project-parser/knx-utils.knx-project-parser.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/openhab-template-processor/knx-utils.openhab-template-processor.main.iml" filepath="$PROJECT_DIR$/.idea/modules/openhab-template-processor/knx-utils.openhab-template-processor.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/semantic-analyzer/knx-utils.semantic-analyzer.main.iml" filepath="$PROJECT_DIR$/.idea/modules/semantic-analyzer/knx-utils.semantic-analyzer.main.iml" />
     </modules>
   </component>
 </project>
