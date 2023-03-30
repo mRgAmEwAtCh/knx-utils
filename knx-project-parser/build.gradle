@@ -6,7 +6,6 @@ plugins {
 }
 description 'KNX Utils :: KNX Project Parser'
 
-
 dependencies {
     implementation 'org.apache.commons:commons-compress:1.21'
 }

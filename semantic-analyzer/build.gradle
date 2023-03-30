@@ -15,7 +15,7 @@ dependencies {
 tasks.register('downloadGermanData', Download) {
     src([
             'https://raw.githubusercontent.com/uschindler/german-decompounder/master/de_DR.xml',
-            'https://raw.githubusercontent.com/uschindler/german-decompounder/master/dictionary-de.txt'
+            'https://raw.githubusercontent.com/uschindler/german-decompounder/master/dictionary-de.txt',
     ])
     dest "${projectDir}/src/main/resources/io/guw/knxutils/semanticanalyzer/luceneext/"
     overwrite true

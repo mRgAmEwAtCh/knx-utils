@@ -1,7 +1,6 @@
 rootProject.name = 'knx-utils'
 
-include 'knx-project-parser'
 include 'cli'
-include 'openhab-template-processor'
+include 'knx-project-parser'
 include 'semantic-analyzer'
-
+include 'openhab-template-processor'
