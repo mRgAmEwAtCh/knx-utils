@@ -9,3 +9,8 @@ target/
 *.lock
 *.versionsBackup
 *.knxproj
+./.gradle
+/**/out/
+/**/build/
+.gradle
+/velocity.log
