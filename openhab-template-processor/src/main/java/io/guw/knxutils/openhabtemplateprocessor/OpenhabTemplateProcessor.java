@@ -54,11 +54,7 @@ public class OpenhabTemplateProcessor {
         }
 
         StringWriter writer = new StringWriter();
-        try {
-            t.merge( context, writer );
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        t.merge( context, writer );
         log.info(writer.toString());
     }
 

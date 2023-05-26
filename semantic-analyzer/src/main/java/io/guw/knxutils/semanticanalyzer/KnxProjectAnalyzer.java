@@ -19,7 +19,6 @@ import java.util.stream.Stream;
 public class KnxProjectAnalyzer {
 
 	private static final Logger LOG = LoggerFactory.getLogger(KnxProjectAnalyzer.class);
-
 	private final KnxProjectFile knxProjectFile;
 	private final KnxProjectCharacteristics characteristics = new GenericCharacteristics();
 	public KnxProjectAnalyzer(KnxProjectFile knxProjectFile) {

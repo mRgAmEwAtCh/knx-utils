@@ -8,3 +8,9 @@ target/
 *.swp
 *.lock
 *.versionsBackup
+*.knxproj
+./.gradle
+/**/out/
+/**/build/
+.gradle
+/velocity.log
