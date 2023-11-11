@@ -11,11 +11,10 @@ import org.apache.velocity.app.VelocityEngine;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @Slf4j
@@ -34,14 +33,21 @@ public class OpenhabTemplateProcessor {
         log.info("generate openhab files for model...");
         try {
             initVelocityEngine();
-            model.forEach(this::processThing);
+            Map<String, List<Thing>> result = model.stream().collect(Collectors.groupingBy(thing -> thing.getPrimarySwitchGroupAddress().getGroupAddressRange().getParent().getName()));
+
+            for (Map.Entry<String, List<Thing>> listEntry : result.entrySet()) {
+                List<String> items = listEntry.getValue().stream().map(this::processThing).collect(Collectors.toList());
+                log.info("\nRoom: " + listEntry.getKey() + "\n" + String.join("\n", items));
+            }
+
+
         } catch (Exception e) {
             log.error("error during model generation: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-    private void processThing(Thing thing){
+    private String processThing(Thing thing){
         Template t = getTemplate(thing);
         log.info("getting template for " + thing.getName() + " Path: " + t.getName());
 
@@ -50,12 +56,13 @@ public class OpenhabTemplateProcessor {
             context = getVelocityContext(thing);
         } catch (OpenhabValidationException e) {
             log.error("validating " + thing.getName() + " failed");
-            return;
+            return "";
         }
 
         StringWriter writer = new StringWriter();
         t.merge( context, writer );
-        log.info(writer.toString());
+        //log.info(writer.toString());
+        return writer.toString();
     }
 
     private VelocityContext getVelocityContext(Thing thing) throws OpenhabValidationException {
